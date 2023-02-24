@@ -3,6 +3,8 @@
 {% block content %}
 
 <div>
+    <!-- method: the method that the browser asks for the urls -->
+    <!-- action: thr url that the form will be send -->
     <form method="POST" action="">
         {% csrf_token %}
         {{form.as_p}}
