@@ -6,3 +6,4 @@ class RoomForm(ModelForm):
         model = Room
         # the item you want to show from the model(Room)
         fields = '__all__'
+        exclude = ['host', 'participants']
