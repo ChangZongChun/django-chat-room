@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-^$1n^23u3q)j(oya37--m-0)_%g&p_mpt^38f@_wmv_=tdb^%(
 # DEBUG = config('DEBUG', default=False, cast=bool)
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['46.51.238.221', '127.0.0.1', 'ec2-46-51-238-221.ap-northeast-1.compute.amazonaws.com',]
 
 
 # Application definition
@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'corsheaders',
+    
 ]
 
 AUTH_USER_MODEL = 'base.User'
@@ -135,7 +136,7 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/images/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / 'static'
+    BASE_DIR / 'static',
 ]
 
 MEDIA_ROOT = BASE_DIR / 'static/images'
