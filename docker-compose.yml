@@ -1,22 +1,22 @@
 version: '3'
 
 services:
-  # django_app:
-  #   build: .
-      # env_file:
-      #   - .env
-  #   volumes:
-  #     - static_vol:/chatroom/static
-  #     - media_vol:/chatroom/static/images
-  #   ports:
-  #     - "8000:8000"
+  django_app:
+    build: .
+    env_file:
+        - .env
+    volumes:
+      - static_vol:/chatroom/static
+      - media_vol:/chatroom/static/images
+    ports:
+      - "8000:8000"
 
   
   nginx:
     build: ./nginx
     volumes:
-      - static_vol:/chatroom/static
-      - media_vol:/chatroom/static/images
+      - static_vol:/chatroom/staticfiles
+      - media_vol:/chatroom/staticfiles
     ports:
       - "80:80"
     depends_on:
