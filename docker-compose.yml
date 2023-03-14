@@ -6,8 +6,8 @@ services:
     env_file:
         - .env
     volumes:
-      - static_vol:/chatroom/static
-      - media_vol:/chatroom/static/images
+      - static_vol:/chatroom/staticfiles
+      - media_vol:/chatroom/staticfiles/images
     ports:
       - "8000:8000"
 
@@ -16,7 +16,7 @@ services:
     build: ./nginx
     volumes:
       - static_vol:/chatroom/staticfiles
-      - media_vol:/chatroom/staticfiles
+      - media_vol:/chatroom/staticfiles/images
     ports:
       - "80:80"
     depends_on:
