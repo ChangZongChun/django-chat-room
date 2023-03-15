@@ -1,0 +1,14 @@
+[Unit]
+Description=gunicorn daemon
+Requires = gunicorn.socket
+After=network.target
+
+[Service]
+User=root
+Group=www-data
+WorkingDirectory=/chatroom
+ExecStart=gunicorn --access-logfile - --workers 3 --bind unix:/chatroom/app.sock -m 007 chatroom.wsgi:application
+
+
+[Install]
+WantedBy=multi-user.target
