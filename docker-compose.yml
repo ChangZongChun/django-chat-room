@@ -3,6 +3,7 @@ version: '3'
 services:
   django_app:
     build: .
+    # entrypoint: entrypoint.sh
     env_file:
         - .env
     volumes:
