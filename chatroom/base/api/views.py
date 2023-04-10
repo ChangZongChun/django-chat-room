@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from base.models import Room
+from base.models import Room, Topic
 from .serializers import RoomSerializer
 
 @api_view(['GET'])
@@ -22,8 +22,46 @@ def getRooms(request):
     return Response(serializer.data)
 
 
-@api_view(['GET'])
+@api_view(['GET', 'PUT', 'DELETE'])
 def getRoom(request, pk):
-    rooms = Room.objects.get(id=pk)
-    serializer = RoomSerializer(rooms, many=False)
+    room = Room.objects.get(id=pk)
+
+    if request.method == 'GET':
+        serializer = RoomSerializer(room, many=False)
+        return Response(serializer.data)
+    
+    if request.method == 'PUT':
+        # topic_name = request.data['topic']
+        # topic, created = Topic.objects.get_or_create(name=topic_name)
+
+        topic_name = request.data['topic']
+        topic, created = Topic.objects.get_or_create(name=topic_name)
+        room.name = request.data['name']
+        room.description = request.data['description']
+        room.topic = topic
+
+        room.save()
+
+        serializer = RoomSerializer(room, many=False)
+        return Response(serializer.data)
+    
+    if request.method =='DELETE':
+        room.delete()
+        return Response('room was deleted')
+
+@api_view(['POST'])
+def createRoom(request):
+    # serializer = RoomSerializer(data=request.data)
+    # if serializer.is_valid():
+    #     serializer.save()
+    topic_name = request.data['topic'],
+    topic, created = Topic.objects.get_or_create(name=topic_name)
+    room = Room.objects.create(
+        host = request.user,
+        topic = topic,
+        name = request.data['name'],
+        description = request.data['description']
+    )
+
+    serializer = RoomSerializer(room, many=False)
     return Response(serializer.data)
