@@ -43,3 +43,4 @@ python manage.py makemigrations musics
 python manage.py migrate
 python manage.py collectstatic
 ```
+(https://github.com/ChangZongChun/django-chat-room/blob/53b19cc96ee7bd646a28729676e44c261eef0359/app_basic_structure_small.jpg)
