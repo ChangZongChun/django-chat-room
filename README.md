@@ -1,6 +1,6 @@
 # Chun's Chat Room
 
-Chun's Chat Room is a website that allows everyone who register an account to discuss any topic in rooms with other users.
+[Chun's Chat Room](http://18.183.74.175) is a website that allows everyone who register an account to discuss any topic in rooms with other users.
 
 ## Installation
 Clone the repository  
