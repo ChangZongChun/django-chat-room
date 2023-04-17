@@ -44,16 +44,10 @@ def getRoom(request, pk):
         return Response(serializer.data)
     
     if request.method == 'PUT':
-        # topic_name = request.data['topic']
-        # topic, created = Topic.objects.get_or_create(name=topic_name)
+        topic_name = request.data['topic']
+        topic, created = Topic.objects.get_or_create(name=topic_name)
 
-        # topic_name = request.data['topic']
-        # topic, created = Topic.objects.get_or_create(name=topic_name)
-        # room.name = request.data['name']
-        # room.description = request.data['description']
-        # room.topic = topic
-
-        # room.save()
+        request.data['topic'] = topic.id
 
         serializer = RoomSerializer(room, data = request.data)
         if serializer.is_valid():
@@ -68,7 +62,7 @@ def getRoom(request, pk):
 @api_view(['POST'])
 @permission_classes([IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly])
 def createRoom(request):
-    topic_name = request.data['topic'],
+    topic_name = request.data['topic']
     topic, created = Topic.objects.get_or_create(name=topic_name)
 
     request.data['topic'] = topic.id
