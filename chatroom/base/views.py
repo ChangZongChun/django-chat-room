@@ -79,6 +79,10 @@ def home(request):
     room_count = rooms.count()
     room_messages = Message.objects.filter(Q(room__topic__name__icontains=q))
 
+    for topic in topics:
+        if topic.room_set.all().count() == 0:
+            topic.delete()
+            
     # 打包成物件
     context = {'rooms': rooms, 'topics': topics, 
                 'room_count': room_count, 'room_messages': room_messages}
@@ -112,6 +116,9 @@ def userProfile(request, pk):
     rooms = user.room_set.all()
     room_messages = user.message_set.all()
     topics = Topic.objects.all()
+    for topic in topics:
+        if topic.room_set.all().count() == 0:
+            topic.delete()
     context = {'user': user, 'rooms': rooms, 'room_messages': room_messages, 'topics': topics}
     return render(request, 'base/profile.html', context)
 
