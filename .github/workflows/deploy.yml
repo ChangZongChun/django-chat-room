@@ -1,0 +1,105 @@
+name: 'Deploy Docker to AWS (EC2)'
+description: 'Deploy a Docker app to an AWS Virtual Machine (EC2) with Docker Compose'
+branding:
+  icon: upload-cloud
+  color: red
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  EC2-Deploy:
+runs-on: ubuntu-latest
+environment:
+  name: ${{ github.ref_name }}
+  url: ${{ steps.deploy.outputs.vm_url }}
+steps:
+  - id: deploy
+    name: Deploy
+    uses: bitovi/github-actions-deploy-docker-to-ec2@v0.5.0
+    with:
+      aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID}}
+      aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+      aws_default_region: us-east-1
+      app_port: 80
+
+inputs:
+  # Checkout
+  checkout:
+    description: 'Specifies if this action should checkout the code'
+    required: false
+    default: 'true'
+  
+  # AWS
+  aws_access_key_id:
+    description: 'AWS access key ID'
+    required: true
+  aws_secret_access_key:
+    description: 'AWS secret access key'
+    required: true
+  aws_session_token:
+    description: 'AWS session token'
+    required: false
+  aws_default_region:
+    description: 'AWS default region'
+    default: us-east-1
+    required: false
+  aws_ami_id:
+    description: 'AWS AMI ID. Will default to the latest Ubuntu 22.04 server image (HVM) '
+    required: false
+  tf_state_bucket:
+    description: 'AWS S3 bucket to use for Terraform state. Defaults to `${org}-${repo}-{branch}-tf-state`'
+    required: false
+  tf_state_bucket_destroy:
+    description: 'Force purge and deletion of S3 bucket defined. Any file contained there will be destroyed. `stack_destroy` must also be `true`'
+    required: false
+    default: 'false'
+  aws_resource_identifier:
+    description: 'Set to override the AWS resource identifier for the deployment.  Defaults to `${org}-{repo}-{branch}`.  Use with destroy to destroy specific resources.'
+  
+  # ENV files
+  repo_env:
+    description: 'File containing environment variables to be used with the app'
+    required: false
+    default: 'repo_env'
+  dot_env:
+    description: '`.env` file to be used with the app from Github secrets'
+    required: false
+  ghv_env:
+    description: '`.env` file to be used with the app from Github variables'
+    required: false
+  aws_secret_env:
+    description: 'Secret name to pull env variables from AWS Secret Manager'
+    required: false
+    default: ''
+  
+  # Application
+  docker_full_cleanup:
+    description: 'Set to true to run docker-compose down and docker system prune --all --force --volumes after.'
+    required: false
+  app_directory:
+    description: 'Relative path for the directory of the app (i.e. where `Dockerfile` and `docker-compose.yaml` files are located). This is the directory that is copied to the EC2 instance.  Default is the root of the repo. Add a .gha-ignore file with a list of files to be exluded.'
+  app_directory_cleanup:
+    description: 'Will generate a timestamped compressed file and delete the app repo directory.'
+    required: false
+  app_port:
+    description: 'Port to expose for the app'
+    required: false
+  lb_port:
+    description: 'Load balancer listening port. Defaults to 80 if NO FQDN provided, 443 if FQDN provided'
+    required: false
+  lb_healthcheck: 
+    description: 'Load balancer health check string. Defaults to HTTP:app_port'
+    required: false
+  
+  # EC2 Instance
+  ec2_instance_profile:
+    description: 'The AWS IAM instance profile to use for the EC2 instance'
+  ec2_instance_type: 
+    description: 'The AWS Instance type'
+    required: false
+  ec2_volume_size: 
+    description: 'The size of the volume (in GB) on the AWS Instance'
+    required: false
+    default: "8"
