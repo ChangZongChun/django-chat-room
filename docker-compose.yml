@@ -11,6 +11,7 @@ services:
       - media_vol:/chatroom/media
     ports:
       - "8000:8000"
+    restart: unless-stopped
 
   
   nginx:
@@ -22,6 +23,7 @@ services:
       - "80:80"
     depends_on:
       - django_app
+    restart: unless-stopped
 
 volumes:
   static_vol:
