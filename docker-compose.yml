@@ -2,6 +2,7 @@ version: '3'
 
 services:
   django_app:
+    image: changzongchun/django_app_image:latest
     build: .
     # entrypoint: entrypoint.sh
     env_file:
@@ -14,6 +15,7 @@ services:
 
   
   nginx:
+    image: changzongchun/nginx_image:latest
     build: ./nginx
     volumes:
       - static_vol:/chatroom/staticfiles
