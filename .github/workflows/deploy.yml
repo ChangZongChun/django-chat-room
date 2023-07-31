@@ -32,6 +32,7 @@ jobs:
 
     - name: Set up SSH key
       run: |
+        mkdir -p ~/.ssh
         echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 400 ~/.ssh/id_rsa
   
