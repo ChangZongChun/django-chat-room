@@ -42,6 +42,7 @@ jobs:
         ssh -i ~/.ssh/id_rsa  \
         ubuntu@ec2-18-183-74-175.ap-northeast-1.compute.amazonaws.com \
         'cd django-chat-room/ && \
+        docker-compose down || true && \
         docker-compose pull && \
         docker-compose up -d'
     
