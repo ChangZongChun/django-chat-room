@@ -4,7 +4,7 @@ services:
   django_app:
     image: changzongchun/django_app_image:latest
     build: .
-    # entrypoint: entrypoint.sh
+    entrypoint: entrypoint.sh
     environment:
       - SECRET_KEY=${SECRET_KEY}
       - DEBUG=${DEBUG_MODE}
