@@ -4,14 +4,15 @@ services:
   django_app:
     image: changzongchun/django_app_image:latest
     build: .
+    entrypoint: entrypoint.sh
     environment:
-      - SECRET_KEY=$SECRET_KEY
-      - DEBUG=$DEBUG_MODE
-      - ALLOWED_HOSTS=$ALLOWED_HOSTS
-      - DB_NAME=$RDS_DBNAME
-      - DB_USER=$RDS_USERNAME
-      - DB_PASSWORD=$RDS_PASSWORD
-      - DB_HOST=$RDS_HOST
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=${DEBUG_MODE}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - DB_NAME=${RDS_DBNAME}
+      - DB_USER=${RDS_USERNAME}
+      - DB_PASSWORD=${RDS_PASSWORD}
+      - DB_HOST=${RDS_HOST}
     volumes:
       - static_vol:/chatroom/staticfiles
       - media_vol:/chatroom/media
