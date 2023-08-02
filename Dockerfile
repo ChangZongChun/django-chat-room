@@ -1,6 +1,7 @@
 FROM python:3.8.13-slim-buster
 WORKDIR /chatroom
 COPY ./chatroom ./
+COPY ./chatroom/entrypoint.sh ./
 
 RUN pip install --upgrade pip --no-cache-dir
 
