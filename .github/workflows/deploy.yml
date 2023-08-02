@@ -49,7 +49,7 @@ jobs:
         cd django-chat-room/
         docker-compose down || true
         docker-compose pull
-        docker-compose up -d'
+        docker-compose up -d
 
         EOF
     
