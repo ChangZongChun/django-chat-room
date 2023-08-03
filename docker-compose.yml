@@ -2,10 +2,17 @@ version: '3'
 
 services:
   django_app:
+    image: changzongchun/django_app_image:latest
     build: .
-    # entrypoint: entrypoint.sh
-    env_file:
-        - .env
+    entrypoint: entrypoint.sh
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=${DEBUG_MODE}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - DB_NAME=${RDS_DBNAME}
+      - DB_USER=${RDS_USERNAME}
+      - DB_PASSWORD=${RDS_PASSWORD}
+      - DB_HOST=${RDS_HOST}
     volumes:
       - static_vol:/chatroom/staticfiles
       - media_vol:/chatroom/media
@@ -15,6 +22,7 @@ services:
 
   
   nginx:
+    image: changzongchun/nginx_image:latest
     build: ./nginx
     volumes:
       - static_vol:/chatroom/staticfiles
