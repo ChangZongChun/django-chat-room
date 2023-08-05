@@ -29,8 +29,8 @@ jobs:
 
     - name: Build and Push Docker image
       run: |
-        docker-compose build
-        docker-compose push
+        docker compose build
+        docker compose push
       env:
         DOCKER_BUILDKIT: 1  # Enable BuildKit for faster builds
 
@@ -52,9 +52,9 @@ jobs:
         'bash -s' << 'EOF'
 
         cd django-chat-room/
-        docker-compose down || true
-        docker-compose pull
-        docker-compose up -d
+        docker compose down || true
+        docker compose pull
+        docker compose up -d
 
         EOF
     
