@@ -3,6 +3,7 @@ version: '3'
 services:
   django_app:
     image: changzongchun/django_app_image:latest
+    # pull_policy: always
     build: .
     entrypoint: entrypoint.sh
     # environment:
@@ -19,11 +20,12 @@ services:
     ports:
       - "8000:8000"
     restart: unless-stopped
-    pull_policy: build
+    
 
   
   nginx:
     image: changzongchun/nginx_image:latest
+    # pull_policy: always
     build: ./nginx
     volumes:
       - static_vol:/chatroom/staticfiles
@@ -33,7 +35,7 @@ services:
     depends_on:
       - django_app
     restart: unless-stopped
-    pull_policy: build
+    
 
 volumes:
   static_vol:
