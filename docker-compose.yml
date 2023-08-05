@@ -19,7 +19,7 @@ services:
     ports:
       - "8000:8000"
     restart: unless-stopped
-    pull_policy: always
+    pull_policy: build
 
   
   nginx:
@@ -33,7 +33,7 @@ services:
     depends_on:
       - django_app
     restart: unless-stopped
-    pull_policy: always
+    pull_policy: build
 
 volumes:
   static_vol:
