@@ -58,10 +58,8 @@ jobs:
         docker compose down || true
         docker compose pull
         docker compose up -d
+        docker images -a
 
         EOF
-
-    - name: List images in ec2 instance
-      run: docker images
     
  
