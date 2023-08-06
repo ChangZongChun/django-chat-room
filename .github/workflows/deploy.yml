@@ -7,9 +7,16 @@ on:
 
 jobs:
 
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     environment: chatroom
+    # strategy:
+    #   matrix:
+    #     include:
+    #       - dockerfile: ./src/Agent/Dockerfile
+    #         image: ghcr.io/username/image1
+    #       - dockerfile: ./src/Dockerfile-dril4net-distribution
+    #         image: ghcr.io/username/image2
 
     steps:
     - name: Checkout Repository
@@ -54,7 +61,6 @@ jobs:
         ubuntu@ec2-18-183-74-175.ap-northeast-1.compute.amazonaws.com \
         'bash -s' << 'EOF'
 
-        docker login --username=${{ secrets.DOCKERHUB_USERNAME }} --password=${{ secrets.DOCKERHUB_PASSWORD }}
         cd django-chat-room/
         docker compose down || true
         docker compose pull
