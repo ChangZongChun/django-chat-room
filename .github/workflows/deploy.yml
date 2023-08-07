@@ -76,6 +76,9 @@ jobs:
 
     steps:
     - name: Set up SSH key
+      env:
+        IMAGE_NAME_DJANGO: ${{ env.IMAGE_NAME_DJANGO }}
+        IMAGE_NAME_NGINX: ${{ env.IMAGE_NAME_NGINX }}
       run: |
         mkdir -p ~/.ssh
         echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
