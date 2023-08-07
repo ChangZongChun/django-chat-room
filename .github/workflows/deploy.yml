@@ -20,9 +20,9 @@ jobs:
       matrix:
         include:
           - dockerfile: ./Dockerfile
-            image: $IMAGE_NAME_NGINX:latest
+            image: $IMAGE_NAME_NGINX
           - dockerfile: ./nginx/Dockerfile
-            image: $IMAGE_NAME_DJANGO:latest
+            image: $IMAGE_NAME_DJANGO
 
     steps:
     - name: Checkout Repository
@@ -30,8 +30,7 @@ jobs:
 
 
     - name: Read environment
-      run: |
-        echo "My secret is ${{ secrets.RDS_DBNAME}}"
+      run: echo "My secret is ${{ secrets.RDS_DBNAME}}"
       
 
     - name: Login Dockerhub
@@ -67,7 +66,7 @@ jobs:
 
 
     - name: List images in github server
-      run: docker images
+      run: docker images ls
 
   deploy:
     needs: [ build ]
