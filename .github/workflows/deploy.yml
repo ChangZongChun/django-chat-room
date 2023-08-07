@@ -12,14 +12,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
     environment: chatroom
+    env:
+      IMAGE_NAME_NGINX: ${{ secrets.DOCKERHUB_USERNAME }}/nginx_image
+      IMAGE_NAME_DJANGO: ${{ secrets.DOCKERHUB_USERNAME }}/django_image
 
     strategy:
       matrix:
         include:
           - dockerfile: ./Dockerfile
-            image: ${{ secrets.DOCKERHUB_USERNAME }}/nginx_image
+            image: $IMAGE_NAME_DJANGO
           - dockerfile: ./nginx/Dockerfile
-            image: ${{ secrets.DOCKERHUB_USERNAME }}/django_image
+            image: $IMAGE_NAME_NGINX
 
     steps:
     - name: Checkout Repository
@@ -50,6 +53,8 @@ jobs:
       uses: docker/metadata-action@v4
       with:
         images: ${{ matrix.image }}
+        flavor: |
+          latest=true
 
 
     - name: Build and push
@@ -59,15 +64,18 @@ jobs:
         file: ${{ matrix.dockerfile }}
         push: true
         tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
+
 
 
     - name: List images in github server
       run: docker images ls
 
   deploy:
-    needs: [ build ]
+    needs: build 
     runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME_NGINX: ${{ secrets.DOCKERHUB_USERNAME }}/nginx_image
+      IMAGE_NAME_DJANGO: ${{ secrets.DOCKERHUB_USERNAME }}/django_image
 
     steps:
     - name: Set up SSH key
