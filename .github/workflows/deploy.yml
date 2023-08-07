@@ -97,5 +97,7 @@ jobs:
         docker images ls -a 
         docker pull $IMAGE_NAME_DJANGO
         docker pull $IMAGE_NAME_NGINX
+        docker run -d $IMAGE_NAME_DJANGO
+        docker run -d $IMAGE_NAME_NGINX
         
         EOF
