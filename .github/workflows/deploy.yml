@@ -12,17 +12,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     environment: chatroom
-    env:
-      IMAGE_NAME_NGINX: ${{ secrets.DOCKERHUB_USERNAME}}/nginx_image
-      IMAGE_NAME_DJANGO: ${{ secrets.DOCKERHUB_USERNAME}}/django_image
 
     strategy:
       matrix:
         include:
           - dockerfile: ./Dockerfile
-            image: $IMAGE_NAME_NGINX
+            image: ${{ secrets.DOCKERHUB_USERNAME }}/nginx_image
           - dockerfile: ./nginx/Dockerfile
-            image: $IMAGE_NAME_DJANGO
+            image: ${{ secrets.DOCKERHUB_USERNAME }}/django_image
 
     steps:
     - name: Checkout Repository
