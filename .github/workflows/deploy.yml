@@ -76,9 +76,6 @@ jobs:
 
     steps:
     - name: Set up SSH key
-      env:
-        IMAGE_NAME_DJANGO: ${{ env.IMAGE_NAME_DJANGO }}
-        IMAGE_NAME_NGINX: ${{ env.IMAGE_NAME_NGINX }}
       run: |
         mkdir -p ~/.ssh
         echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
@@ -92,6 +89,8 @@ jobs:
       run: |
         ssh -i ~/.ssh/id_rsa  \
         ubuntu@ec2-18-183-74-175.ap-northeast-1.compute.amazonaws.com \
+        IMAGE_NAME_DJANGO="${{ env.IMAGE_NAME_DJANGO }}" \
+        IMAGE_NAME_NGINX="${{ env.IMAGE_NAME_NGINX }}" \
         'bash -s' << 'EOF'
 
         cd django-chat-room/  
