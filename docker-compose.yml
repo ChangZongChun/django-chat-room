@@ -2,7 +2,7 @@ version: '3'
 
 services:
   django_app:
-    image: changzongchun/django_app:latest
+    image: changzongchun/django_image:latest
     # pull_policy: always
     build: .
     entrypoint: entrypoint.sh
@@ -24,7 +24,7 @@ services:
 
   
   nginx:
-    image: changzongchun/nginx:latest
+    image: changzongchun/nginx_image:latest
     # pull_policy: always
     build: ./nginx
     volumes:
