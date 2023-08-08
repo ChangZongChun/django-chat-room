@@ -64,7 +64,7 @@ jobs:
 
 
     - name: List images in github server
-      run: docker images ls
+      run: docker image ls -a
 
   deploy:
     needs: build 
@@ -89,11 +89,12 @@ jobs:
         ssh -i ~/.ssh/id_rsa  \
         ubuntu@ec2-18-183-74-175.ap-northeast-1.compute.amazonaws.com \
         ' 
-        cd django-chat-room/  
+        cd django-chat-room/ 
+        docker  
         docker compose pull
-        docker images ls -a 
+        docker image ls -a 
         docker compose up -d
         '
-        
+
     # IMAGE_NAME_DJANGO="${{ env.IMAGE_NAME_DJANGO }}" \
     # IMAGE_NAME_NGINX="${{ env.IMAGE_NAME_NGINX }}" \
