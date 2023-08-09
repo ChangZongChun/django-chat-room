@@ -12,4 +12,5 @@ ENTRYPOINT ["./entrypoint.sh"]
 
 # CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
 EXPOSE 8000
-CMD ["gunicorn", "--bind", "0.0.0.0:8000" , "chatroom.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000" , "chatroom.wsgi:application" , "--log-level=debug" ]
+# -c /some/folder/gunicorn.conf.py
