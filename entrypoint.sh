@@ -1,5 +1,4 @@
 #!/bin/sh
-cd chatroom
 
 echo 'Run migration'
 python3 manage.py makemigrations
