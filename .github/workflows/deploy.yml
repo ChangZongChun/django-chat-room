@@ -92,16 +92,20 @@ jobs:
 
         # Add the host key of your EC2 instance to known_hosts
         ssh-keyscan ec2-52-194-192-146.ap-northeast-1.compute.amazonaws.com >> ~/.ssh/known_hosts
-  
+
+    - name: Copy .env-gh to EC2
+      run: |
+        scp -i ~/.ssh/id_rsa .env-gh ubuntu@ec2-52-194-192-146.ap-northeast-1.compute.amazonaws.com:/home/ubuntu/
 
     - name: Deploy to EC2
       run: |
-        scp -i ~/.ssh/id_rsa .env-gh ubuntu@ec2-52-194-192-146.ap-northeast-1.compute.amazonaws.com \
         ssh -i ~/.ssh/id_rsa  \
         ubuntu@ec2-52-194-192-146.ap-northeast-1.compute.amazonaws.com \
         IMAGE_NAME_DJANGO="${{ env.IMAGE_NAME_DJANGO }}" \
         IMAGE_NAME_NGINX="${{ env.IMAGE_NAME_NGINX }}" \
-        '  
+        '
+        ls -la
+        pwd 
         docker login
         docker pull $IMAGE_NAME_DJANGO
         docker pull $IMAGE_NAME_NGINX
