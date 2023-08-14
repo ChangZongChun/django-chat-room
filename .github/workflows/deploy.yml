@@ -82,7 +82,7 @@ jobs:
         DB_PASSWORD=${{secrets.RDS_PASSWORD}}
         DB_HOST=${{secrets.RDS_HOST}}
         EOF
-        ls
+        ls -la
 
     - name: Set up SSH key
       run: |
