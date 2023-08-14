@@ -17,9 +17,9 @@ jobs:
       matrix:
         include:
           - dockerfile: ./Dockerfile
-            image: nginx_image
-          - dockerfile: ./nginx/Dockerfile
             image: django_image
+          - dockerfile: ./nginx/Dockerfile
+            image: nginx_image
 
     steps:
     - name: Checkout Repository
@@ -76,6 +76,7 @@ jobs:
         DB_PASSWORD=${{secrets.RDS_PASSWORD}}
         DB_HOST=${{secrets.RDS_HOST}}
         EOF
+        ls
 
 
 
@@ -109,7 +110,7 @@ jobs:
         docker pull $IMAGE_NAME_NGINX
         docker image ls -a 
         docker run -d  --network host $IMAGE_NAME_NGINX
-        docker run -d --env-file /.env-gh --network host $IMAGE_NAME_DJANGO
+        docker run -d --env-file .env-gh --network host $IMAGE_NAME_DJANGO
         '
       # docker compose down || true
       # docker compose pull
