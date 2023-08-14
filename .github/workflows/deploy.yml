@@ -65,6 +65,19 @@ jobs:
     - name: List images in github server
       run: docker image ls -a
 
+    - name: Configure env
+      run: |
+        cat << EOF > .env-gh
+        SECRET_KEY=${{ secrets.SECRET_KEY}}
+        DEBUG=False
+        ALLOWED_HOSTS= .127.0.0.1, .localhost, .18.183.74.175, 52.194.192.146
+        DB_NAME=${{secrets.RDS_DBNAME}}
+        DB_USER=${{secrets.RDS_USERNAME}}
+        DB_PASSWORD=${{secrets.RDS_PASSWORD}}
+        DB_HOST=${{secrets.RDS_HOST}}
+        EOF
+
+
 
   deploy:
     needs: build 
@@ -95,8 +108,8 @@ jobs:
         docker pull $IMAGE_NAME_DJANGO
         docker pull $IMAGE_NAME_NGINX
         docker image ls -a 
-        docker run -d --network host $IMAGE_NAME_NGINX
-        docker run -d --network host $IMAGE_NAME_DJANGO
+        docker run -d  --network host $IMAGE_NAME_NGINX
+        docker run -d --env-file /.env-gh --network host $IMAGE_NAME_DJANGO
         '
       # docker compose down || true
       # docker compose pull
