@@ -6,7 +6,7 @@ ENV PYTHONUNBUFFERED 1
 
 RUN pip install --upgrade pip --no-cache-dir
 
-COPY ./chatroom ./chatroom
+COPY ./chatroom ./
 RUN pip install -r /chatroom/requirements.txt --no-cache-dir
 
 COPY ./docker-compose.yml ./docker-compose.yml
