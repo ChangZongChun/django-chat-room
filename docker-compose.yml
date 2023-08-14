@@ -5,7 +5,6 @@ services:
     image: changzongchun/django_image:latest
     # pull_policy: always
     build: .
-    entrypoint: entrypoint.sh
     # environment:
     #   - SECRET_KEY=${SECRET_KEY}
     #   - DEBUG=${DEBUG_MODE}

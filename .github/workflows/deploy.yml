@@ -81,13 +81,13 @@ jobs:
         chmod 400 ~/.ssh/id_rsa
 
         # Add the host key of your EC2 instance to known_hosts
-        ssh-keyscan ec2-18-183-74-175.ap-northeast-1.compute.amazonaws.com >> ~/.ssh/known_hosts
+        ssh-keyscan ec2-52-194-192-146.ap-northeast-1.compute.amazonaws.com >> ~/.ssh/known_hosts
   
 
     - name: Deploy to EC2
       run: |
         ssh -i ~/.ssh/id_rsa  \
-        ubuntu@ec2-18-183-74-175.ap-northeast-1.compute.amazonaws.com \
+        ubuntu@ec2-52-194-192-146.ap-northeast-1.compute.amazonaws.com \
         ' 
         cd django-chat-room/ 
         docker  compose down || true

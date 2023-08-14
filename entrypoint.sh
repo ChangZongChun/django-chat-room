@@ -1,7 +1,5 @@
 #!/bin/sh
 
-# cd django-chat-room/
-
 echo 'Run migration'
 python3 manage.py makemigrations
 python3 manage.py migrate
