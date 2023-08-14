@@ -92,11 +92,11 @@ jobs:
         IMAGE_NAME_NGINX="${{ env.IMAGE_NAME_NGINX }}" \
         '  
         docker login
-        docker pull IMAGE_NAME_DJANGO
-        docker pull IMAGE_NAME_NGINX
+        docker pull $IMAGE_NAME_DJANGO
+        docker pull $IMAGE_NAME_NGINX
         docker image ls -a 
-        docker run -d --network host IMAGE_NAME_NGINX
-        docker run -d --network host IMAGE_NAME_DJANGO
+        docker run -d --network host $IMAGE_NAME_NGINX
+        docker run -d --network host $IMAGE_NAME_DJANGO
         '
       # docker compose down || true
       # docker compose pull
