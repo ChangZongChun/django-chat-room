@@ -89,6 +89,7 @@ jobs:
         ssh -i ~/.ssh/id_rsa  \
         ubuntu@ec2-52-194-192-146.ap-northeast-1.compute.amazonaws.com \
         '  
+        docker login
         docker  compose down || true
         docker compose pull
         docker image ls -a 
