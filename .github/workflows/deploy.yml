@@ -93,7 +93,7 @@ jobs:
         docker compose down || true
         docker compose pull
         docker image ls -a 
-        docker compose up -d -f docker-compose.yml
+        docker compose -f docker-compose.yml up -d
         '
 
     # IMAGE_NAME_DJANGO="${{ env.IMAGE_NAME_DJANGO }}" \
