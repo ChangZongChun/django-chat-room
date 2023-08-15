@@ -76,7 +76,7 @@ jobs:
         cat << EOF > .env-gh
         SECRET_KEY=${{ secrets.SECRET_KEY}}
         DEBUG=False
-        ALLOWED_HOSTS= .127.0.0.1, .localhost, .18.183.74.175, 52.194.192.146
+        ALLOWED_HOSTS= .127.0.0.1, .localhost, .18.183.74.175, 52.194.249.240
         DB_NAME=${{secrets.RDS_DBNAME}}
         DB_USER=${{secrets.RDS_USERNAME}}
         DB_PASSWORD=${{secrets.RDS_PASSWORD}}
@@ -91,27 +91,25 @@ jobs:
         chmod 400 ~/.ssh/id_rsa
 
         # Add the host key of your EC2 instance to known_hosts
-        ssh-keyscan ec2-52-194-192-146.ap-northeast-1.compute.amazonaws.com >> ~/.ssh/known_hosts
+        ssh-keyscan ec2-52-194-249-240.ap-northeast-1.compute.amazonaws.com >> ~/.ssh/known_hosts
 
     - name: Copy .env-gh to EC2
       run: |
-        scp -i ~/.ssh/id_rsa .env-gh ubuntu@ec2-52-194-192-146.ap-northeast-1.compute.amazonaws.com:/home/ubuntu/
+        scp -i ~/.ssh/id_rsa .env-gh ubuntu@ec2-52-194-249-240.ap-northeast-1.compute.amazonaws.com:/home/ubuntu/
 
     - name: Deploy to EC2
       run: |
         ssh -i ~/.ssh/id_rsa  \
-        ubuntu@ec2-52-194-192-146.ap-northeast-1.compute.amazonaws.com \
+        ubuntu@ec2-52-194-249-240.ap-northeast-1.compute.amazonaws.com \
         IMAGE_NAME_DJANGO="${{ env.IMAGE_NAME_DJANGO }}" \
         IMAGE_NAME_NGINX="${{ env.IMAGE_NAME_NGINX }}" \
         '
-        ls -la
-        pwd 
         docker login
         docker pull $IMAGE_NAME_DJANGO
         docker pull $IMAGE_NAME_NGINX
-        docker image ls -a 
-        docker run -d  --network host $IMAGE_NAME_NGINX
-        docker run -d --env-file .env-gh --network host $IMAGE_NAME_DJANGO
+        docker image ls -a
+        docker run -d --env-file .env-gh --network host $IMAGE_NAME_DJANGO -v static_volume:/opt/shared/staticfiles $IMAGE_NAME_DJANGO 
+        docker run -d --network host $IMAGE_NAME_NGINX -v static_volume:/opt/shared/staticfiles $IMAGE_NAME_NGINX
         '
       # docker compose down || true
       # docker compose pull
