@@ -105,11 +105,13 @@ jobs:
         IMAGE_NAME_NGINX="${{ env.IMAGE_NAME_NGINX }}" \
         '
         docker login
+        docker stop webapp || true
+        docker stop nginx || true
         docker pull $IMAGE_NAME_DJANGO
         docker pull $IMAGE_NAME_NGINX
         docker image ls -a
-        docker run -d --env-file .env-gh --network host $IMAGE_NAME_DJANGO -v static_volume:/opt/shared/staticfiles $IMAGE_NAME_DJANGO 
-        docker run -d --network host $IMAGE_NAME_NGINX -v static_volume:/opt/shared/staticfiles $IMAGE_NAME_NGINX
+        docker run --name webapp -d --env-file .env-gh --network host $IMAGE_NAME_DJANGO -v static_volume:/opt/shared/staticfiles $IMAGE_NAME_DJANGO 
+        docker run --name nginx -d --network host $IMAGE_NAME_NGINX -v static_volume:/opt/shared/staticfiles $IMAGE_NAME_NGINX
         '
       # docker compose down || true
       # docker compose pull
