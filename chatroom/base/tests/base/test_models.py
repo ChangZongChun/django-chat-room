@@ -39,4 +39,4 @@ class TestMessageModel:
         message = message_factory(body="test-message-body")
         assert message.__str__() == "test-message-body"
         print(message.user.username)
-        assert len(message) < 50
+        assert len(message.__str__()) < 50
