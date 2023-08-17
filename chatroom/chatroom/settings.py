@@ -156,7 +156,7 @@ STATICFILES_DIRS = [
 ]
 
 # STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATIC_ROOT = '/opt/shared/staticfiles/'
+STATIC_ROOT = '/home/ubuntu/shared/staticfiles/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
