@@ -113,14 +113,14 @@ jobs:
         docker pull $IMAGE_NAME_NGINX
         docker image ls -a
         docker run --name webapp -d \
-        -v static_vol:/opt/shared/staticfiles \
-        -v media_vol:/opt/shared/media \
+        -v static_vol:/home/ubuntu/staticfiles \
+        -v media_vol:/home/ubuntu/media \
         --env-file .env-gh \
         --network host \
         $IMAGE_NAME_DJANGO
         docker run --name nginx -d \
-        -v static_vol:/opt/shared/staticfiles \
-        -v media_vol:/opt/shared/media \
+        -v static_vol:/home/ubuntu/staticfiles \
+        -v media_vol:/home/ubuntu/media \
         --network host \
         $IMAGE_NAME_NGINX
         '
