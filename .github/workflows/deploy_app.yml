@@ -5,9 +5,11 @@ on:
   push:
     branches: 
       - master 
-    paths-ignore:
-      - 'nginx/**'
-      - '.github\workflows\deploy_nginx.yml'
+    paths:
+      - 'chatroom/**'
+      - 'gunicorn/**'
+      - 'Dockerfile'
+      - 'entrypoint.sh'
 
 jobs:
   build_django_and_gunicorn:
