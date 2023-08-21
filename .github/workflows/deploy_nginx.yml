@@ -1,4 +1,4 @@
-name: Build Nginx Image
+name: 'Deploy Nginx with Docker to AWS (EC2)'
 
 on:
   push:
