@@ -9,7 +9,7 @@ on:
       - '.github\workflows\deploy_nginx.yml'
 
 jobs:
-  build_nginx:
+  build_nginx_image:
     runs-on: ubuntu-latest
 
     steps:
@@ -32,7 +32,7 @@ jobs:
 
 
   deploy:
-    needs: build_nginx 
+    needs: build_nginx_image 
     runs-on: ubuntu-latest
     env:
         IMAGE_NAME_NGINX: ${{ secrets.DOCKERHUB_USERNAME }}/nginx_image
