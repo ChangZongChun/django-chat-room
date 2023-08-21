@@ -3,6 +3,8 @@ name: 'Deploy Django with Docker to AWS (EC2)'
 
 on:
   push:
+    branches: 
+      - master 
     paths-ignore:
       - 'nginx/**'
 
@@ -25,7 +27,7 @@ jobs:
     - name: Build and push Django image to Dockerhub
       run: | 
         docker build -t django_image .
-        docker push django_image:latest
+        docker push ${{ secrets.DOCKERHUB_USERNAME }}/django_image:latest
 
 
 
