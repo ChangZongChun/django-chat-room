@@ -6,7 +6,7 @@ on:
         - master
     paths:
       - 'nginx/**'
-      - '.github\workflows\deploy_nginx.yml'
+      - '.github/workflows/deploy_nginx.yml'
 
 jobs:
   build_nginx_image:
