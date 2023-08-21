@@ -13,76 +13,115 @@ on:
       - '.github/workflows/deploy_app.yml'
 
 jobs:
-  build_django_and_gunicorn:
-    runs-on: ubuntu-latest
+    pytest_django:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: ./chatroom/
 
-    steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v3
+        strategy:
+            matrix:
+                python-version: [3.8]
+
+        env:
+            SECRET_KEY: ${{ secrets.SECRET_KEY}}
+            DEBUG: "TRUE"
+            ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS}}
+            DB_NAME: ${{secrets.RDS_DBNAME}}
+            DB_USER: ${{secrets.RDS_USERNAME}}
+            DB_PASSWORD: ${{secrets.RDS_PASSWORD}}
+            DB_HOST: ${{secrets.RDS_HOST}}
+
+        steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v3
+
         
+        - name: Setup Python 3.8
+          uses: actions/setup-python@v4
+          with:
+            python-version: ${{ matrix.python-version }}
 
-    - name: Login Dockerhub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_PASSWORD }}
-        
+        - name: Install dependencies
+          run: |
+            python -m pip install --upgrade pip
+            pip install -r ./requirements.txt
 
-    - name: Build and push Django image to Dockerhub
-      run: | 
-        docker build . --tag ${{ secrets.DOCKERHUB_USERNAME }}/django_image:latest
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/django_image:latest
+        - name: Test App Code
+          run: pytest -rP
 
 
+    build_django_and_gunicorn:
+        needs: pytest_django 
+        runs-on: ubuntu-latest
 
-  deploy:
-    needs: build_django_and_gunicorn 
-    runs-on: ubuntu-latest
-    env:
-      IMAGE_NAME_DJANGO: ${{ secrets.DOCKERHUB_USERNAME }}/django_image
+        steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v3
+            
 
-    steps:
-    - name: Configure env
-      run: |
-        cat << EOF > .env-gh
-        SECRET_KEY=${{ secrets.SECRET_KEY}}
-        DEBUG=False
-        ALLOWED_HOSTS= .127.0.0.1, .localhost, .18.183.74.175, 52.194.249.240
-        DB_NAME=${{secrets.RDS_DBNAME}}
-        DB_USER=${{secrets.RDS_USERNAME}}
-        DB_PASSWORD=${{secrets.RDS_PASSWORD}}
-        DB_HOST=${{secrets.RDS_HOST}}
-        EOF
-        ls -la
+        - name: Login Dockerhub
+          uses: docker/login-action@v2
+          with:
+            username: ${{ secrets.DOCKERHUB_USERNAME }}
+            password: ${{ secrets.DOCKERHUB_PASSWORD }}
+            
 
-    - name: Set up SSH key
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 400 ~/.ssh/id_rsa
+        - name: Build and push Django image to Dockerhub
+          run: | 
+            docker build . --tag ${{ secrets.DOCKERHUB_USERNAME }}/django_image:latest
+            docker push ${{ secrets.DOCKERHUB_USERNAME }}/django_image:latest
 
-        # Add the host key of your EC2 instance to known_hosts
-        ssh-keyscan ec2-52-194-249-240.ap-northeast-1.compute.amazonaws.com >> ~/.ssh/known_hosts
 
-    - name: Copy .env-gh to EC2
-      run: |
-        scp -i ~/.ssh/id_rsa .env-gh ubuntu@ec2-52-194-249-240.ap-northeast-1.compute.amazonaws.com:/home/ubuntu/
 
-    - name: Deploy to EC2
-      run: |
-        ssh -i ~/.ssh/id_rsa  \
-        ubuntu@ec2-52-194-249-240.ap-northeast-1.compute.amazonaws.com \
-        IMAGE_NAME_DJANGO="${{ env.IMAGE_NAME_DJANGO }}" \
-        '
-        docker login
-        docker stop webapp || true
-        docker rm webapp || true
-        docker pull $IMAGE_NAME_DJANGO
-        docker image ls -a
-        docker run --name webapp -d \
-        -v static_vol:/chatroom/staticfiles \
-        -v media_vol:/chatroom/media/ \
-        --env-file .env-gh \
-        --network host \
-        $IMAGE_NAME_DJANGO
-        '
+    deploy:
+        needs: build_django_and_gunicorn 
+        runs-on: ubuntu-latest
+        env:
+            IMAGE_NAME_DJANGO: ${{ secrets.DOCKERHUB_USERNAME }}/django_image
+
+        steps:
+        - name: Configure env
+          run: |
+            cat << EOF > .env-gh
+            SECRET_KEY=${{ secrets.SECRET_KEY}}
+            DEBUG=False
+            ALLOWED_HOSTS= ${{ secrets.ALLOWED_HOSTS}}
+            DB_NAME=${{secrets.RDS_DBNAME}}
+            DB_USER=${{secrets.RDS_USERNAME}}
+            DB_PASSWORD=${{secrets.RDS_PASSWORD}}
+            DB_HOST=${{secrets.RDS_HOST}}
+            EOF
+            ls -la
+
+        - name: Set up SSH key
+          run: |
+            mkdir -p ~/.ssh
+            echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+            chmod 400 ~/.ssh/id_rsa
+
+            # Add the host key of your EC2 instance to known_hosts
+            ssh-keyscan ec2-52-194-249-240.ap-northeast-1.compute.amazonaws.com >> ~/.ssh/known_hosts
+
+        - name: Copy .env-gh to EC2
+          run: |
+            scp -i ~/.ssh/id_rsa .env-gh ubuntu@ec2-52-194-249-240.ap-northeast-1.compute.amazonaws.com:/home/ubuntu/
+
+        - name: Deploy to EC2
+          run: |
+            ssh -i ~/.ssh/id_rsa  \
+            ubuntu@ec2-52-194-249-240.ap-northeast-1.compute.amazonaws.com \
+            IMAGE_NAME_DJANGO="${{ env.IMAGE_NAME_DJANGO }}" \
+            '
+            docker login
+            docker stop webapp || true
+            docker rm webapp || true
+            docker pull $IMAGE_NAME_DJANGO
+            docker image ls -a
+            docker run --name webapp -d \
+            -v static_vol:/chatroom/staticfiles \
+            -v media_vol:/chatroom/media/ \
+            --env-file .env-gh \
+            --network host \
+            $IMAGE_NAME_DJANGO
+            '
