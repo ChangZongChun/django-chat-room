@@ -68,7 +68,7 @@ jobs:
       run: |
         ssh -i ~/.ssh/id_rsa  \
         ubuntu@ec2-52-194-249-240.ap-northeast-1.compute.amazonaws.com \
-        IMAGE_NAME_DJANGO="${{ env.IMAGE_NAME_DJANGO }}"
+        IMAGE_NAME_DJANGO="${{ env.IMAGE_NAME_DJANGO }}" \
         '
         docker login
         docker stop webapp || true
