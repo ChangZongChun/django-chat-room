@@ -23,8 +23,8 @@ jobs:
 
     - name: Build and push Nginx image to Dockerhub
       run: |
-        docker build -t nginx_image ./nginx
-        docker push nginx_image:latest
+        docker build ./nginx --tag ${{ secrets.DOCKERHUB_USERNAME }}/nginx_image:latest
+        docker push ${{ secrets.DOCKERHUB_USERNAME }}/nginx_image:latest
 
 
 
