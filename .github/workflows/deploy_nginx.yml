@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'nginx/**'
+      - '.github\workflows\deploy_nginx.yml'
 
 jobs:
   build_nginx:
@@ -44,7 +45,7 @@ jobs:
         # Add the host key of your EC2 instance to known_hosts
         ssh-keyscan ec2-52-194-249-240.ap-northeast-1.compute.amazonaws.com >> ~/.ssh/known_hosts
 
-        
+
     - name: Deploy to EC2
       run: |
         ssh -i ~/.ssh/id_rsa  \

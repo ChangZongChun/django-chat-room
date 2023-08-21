@@ -7,6 +7,7 @@ on:
       - master 
     paths-ignore:
       - 'nginx/**'
+      - '.github\workflows\deploy_nginx.yml'
 
 jobs:
   build_django_and_gunicorn:
