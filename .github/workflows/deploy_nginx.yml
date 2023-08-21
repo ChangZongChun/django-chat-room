@@ -1,0 +1,67 @@
+name: Build Nginx Image
+
+on:
+  push:
+    paths:
+      - 'nginx/**'
+
+jobs:
+  build_nginx:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+            
+    
+    - name: Login Dockerhub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+
+    - name: Build and push Nginx image to Dockerhub
+      run: |
+        docker build -t nginx_image ./nginx
+        docker push nginx_image:latest
+
+
+
+  deploy:
+    needs: build_nginx 
+    runs-on: ubuntu-latest
+    env:
+        IMAGE_NAME_NGINX: ${{ secrets.DOCKERHUB_USERNAME }}/nginx_image
+
+    steps:
+    - name: Set up SSH key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 400 ~/.ssh/id_rsa
+
+        # Add the host key of your EC2 instance to known_hosts
+        ssh-keyscan ec2-52-194-249-240.ap-northeast-1.compute.amazonaws.com >> ~/.ssh/known_hosts
+
+    - name: Copy .env-gh to EC2
+      run: |
+        scp -i ~/.ssh/id_rsa .env-gh ubuntu@ec2-52-194-249-240.ap-northeast-1.compute.amazonaws.com:/home/ubuntu/
+
+    - name: Deploy to EC2
+      run: |
+        ssh -i ~/.ssh/id_rsa  \
+        ubuntu@ec2-52-194-249-240.ap-northeast-1.compute.amazonaws.com \
+        IMAGE_NAME_NGINX="${{ env.IMAGE_NAME_NGINX }}"
+        '
+        docker login
+        docker stop nginx || true
+        docker rm nginx || true
+        docker pull $IMAGE_NAME_NGINX
+        docker image ls -a
+        docker run --name nginx -d \
+        -v static_vol:/chatroom/staticfiles \
+        -v media_vol:/chatroom/media/ \
+        --network host \
+        $IMAGE_NAME_NGINX
+        '

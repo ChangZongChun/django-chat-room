@@ -32,14 +32,6 @@ jobs:
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
 
-    # - name: Build and Push Docker image
-    #   run: |
-    #     docker compose build
-    #     docker compose push
-    #   env:
-    #     DOCKER_BUILDKIT: 1  # Enable BuildKit for faster builds
-
-
     - name: Extract metadata (tags, labels) for Docker
       id: meta
       uses: docker/metadata-action@v4
