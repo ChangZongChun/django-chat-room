@@ -10,6 +10,7 @@ on:
       - 'gunicorn/**'
       - 'Dockerfile'
       - 'entrypoint.sh'
+      - '.github/workflows/deploy_app.yml'
 
 jobs:
   build_django_and_gunicorn:
